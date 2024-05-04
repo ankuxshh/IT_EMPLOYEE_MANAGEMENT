@@ -1,0 +1,168 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+  <style>
+    body {
+        padding-top: 56px; 
+        margin-bottom: 70px;
+        background-image: url('{% static "images/charlesdeluvio-Lks7vei-eAg-unsplash.jpg" %}');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed; 
+        background-position: center; 
+        padding-top: 100px;
+      }
+  
+      .navbar-nav .nav-link {
+        color: #000 !important; 
+      }
+  
+      .navbar {
+          background-color: rgba(0, 0, 0, 0.8);
+      }
+  
+      .content {
+          padding: 20px;
+          color: white;
+        }
+    
+        .box-container {
+          padding-top: 50px;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          gap: 80px;
+        }
+    
+        .box {
+          background-color: rgba(255, 255, 255, 0.7);
+          padding: 20px;
+          border-radius: 5px;
+          width: 400px; 
+        }
+  
+        .box button {
+          margin-top: 10px;
+        }
+    
+        .footer {
+          background-color: rgba(0, 0, 0, 0.8);
+          color: #ffffff; 
+          padding: 20px 0;
+          text-align: center;
+        }
+    
+        h2, p {
+          text-align: center;
+          color: black; 
+        }
+  
+        p1 {
+          text-align: center;
+          color: white; 
+        }
+  
+        footer {
+          background-color: rgba(0, 0, 0, 0.8);
+          color: #ffffff; 
+          padding: 20px 0;
+          text-align: center;
+      }
+
+    .update-profile-container {
+      background-color: rgba(255, 255, 255, 0.7);
+      padding: 40px;
+      border-radius: 5px;
+      width: 400px;
+      margin: auto;
+      margin-top: 10px;
+    }
+  </style>
+  <title>Update Developer Profile</title>
+</head>
+<body>
+    <nav class="navbar navbar-dark fixed-top">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{% url 'homepage' %}">IT Employee Management</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Employee Management</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'tl_asign_project_page' %}">Asign Project</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'tl_project_status_page' %}">Project Status</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'tl_update_profile_page' %}">Update Pofile</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'tl_reset_password_page' %}">Reset password</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'homepage' %}">Logout</a>
+                  </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
+<div class="container update-profile-container">
+  <h2>Update Developer Profile</h2>
+  <br>
+  <form method="post" action="" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" value="{{ user.username }}" readonly>
+    </div>
+    <div class="mb-3">
+      <label for="address" class="form-label">Address</label>
+      <input type="text" class="form-control" id="address" name="address" placeholder="Enter your updated address">
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email address</label>
+      <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Enter your updated email" value="{{ user.email }}" readonly>
+    </div>
+    <div class="mb-3">
+      <label for="phone" class="form-label">Phone Number</label>
+      <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter your updated phone number">
+    </div>
+    <div class="mb-3">
+      <label for="course" class="form-label">Course Completed</label>
+      <input type="text" class="form-control" id="course" name="course" placeholder="Enter your updated course completed">
+    </div>
+    <div class="mb-3">
+      <label for="certificate" class="form-label">Certificate Attachment</label>
+      <input type="file" class="form-control" id="certificate" name="certificate">
+    </div>
+    <div class="mb-3">
+      <label for="department" class="form-label">Department</label>
+      <input type="text" class="form-control" id="department" name="department" placeholder="Enter your updated department">
+    </div>
+    <button type="submit" class="btn btn-primary d-block mx-auto">Update Profile</button>
+  </form>
+</div>
+<br>
+<br>
+<footer class="fixed-bottom">
+  <div class="container">
+    <p1>&copy; 2024 IT Employee Management. All rights reserved.</p1>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

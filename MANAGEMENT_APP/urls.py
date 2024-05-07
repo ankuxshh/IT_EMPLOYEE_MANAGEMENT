@@ -10,7 +10,7 @@ urlpatterns = [
 
     path('developer_registerpage', views.developer_registerpage, name='developer_registerpage'),
     
-    path('send_request_to_admin_from_developer', views.send_request_to_admin_from_developer, name="send_request_to_admin_from_developer"),
+    path('send_request_to_admin_from_developer', views.send_request_to_admin_from_developer, name='send_request_to_admin_from_developer'),
 
     path('teamleader_registerpage', views.teamleader_registerpage, name='teamleader_registerpage'),
 

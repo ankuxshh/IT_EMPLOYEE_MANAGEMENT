@@ -96,7 +96,6 @@
   {% endfor %}
 {% endif %}
   <h2>Developer Registration</h2>
-  
 
   <form method="post" action="{% url 'send_request_to_admin_from_developer' %}" enctype="multipart/form-data">
     {% csrf_token %}
@@ -117,12 +116,12 @@
       <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter your phone number">
     </div>
     <div class="mb-3">
-      <label for="course" class="form-label">Course Completed</label>
-      <input type="text" class="form-control" id="course" name="course" placeholder="Enter the course completed">
+      <label for="course_completed" class="form-label">Course Completed</label>
+      <input type="text" class="form-control" id="course_completed" name="course_completed" placeholder="Enter the course completed">
     </div>
     <div class="mb-3">
-      <label for="certificate" class="form-label">Certificate Attachment</label>
-      <input type="file" class="form-control" id="certificate" name="certificate">
+      <label for="certification" class="form-label">Certificate Attachment</label>
+      <input type="file" class="form-control" id="certification" name="certification">
     </div>
     <div class="mb-3">
       <label for="department" class="form-label">Department</label>

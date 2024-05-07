@@ -31,14 +31,16 @@ class UserProject(models.Model):
     end_date = models.DateField()
     attachment = models.FileField(upload_to='project_attachments/')
 
-class UserProjectModule(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+class ProjectModule(models.Model):
     project = models.ForeignKey(UserProject, on_delete=models.CASCADE)
-    module_name = models.CharField(max_length=255)
+    assigned_developer = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='assigned_modules', on_delete=models.SET_NULL, null=True, blank=True)
+    module_name = models.CharField(max_length=100)
+    start_date = models.DateField()
+    end_date = models.DateField()
 
 class UserWorkProgress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    project_module = models.ForeignKey(UserProjectModule, on_delete=models.CASCADE)
+    project = models.ForeignKey(UserProject, on_delete=models.CASCADE)
     progress_update = models.TextField()
     attachments = models.FileField(upload_to='work_attachments/', null=True, blank=True)
     date = models.DateField(auto_now_add=True)

@@ -126,7 +126,7 @@
     {% csrf_token %}
     <div class="mb-3">
       <label for="name" class="form-label">Name</label>
-      <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" value="{{ user.username }}" readonly>
+      <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" value="{{ user.name }}" readonly>
     </div>
     <div class="mb-3">
       <label for="address" class="form-label">Address</label>
@@ -141,12 +141,12 @@
       <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter your updated phone number">
     </div>
     <div class="mb-3">
-      <label for="course" class="form-label">Course Completed</label>
-      <input type="text" class="form-control" id="course" name="course" placeholder="Enter your updated course completed">
+      <label for="course_completed" class="form-label">Course Completed</label>
+      <input type="text" class="form-control" id="course_completed" name="course_completed" placeholder="Enter your updated course completed">
     </div>
     <div class="mb-3">
-      <label for="certificate" class="form-label">Certificate Attachment</label>
-      <input type="file" class="form-control" id="certificate" name="certificate">
+      <label for="certification" class="form-label">Certificate Attachment</label>
+      <input type="file" class="form-control" id="certification" name="certification">
     </div>
     <div class="mb-3">
       <label for="department" class="form-label">Department</label>

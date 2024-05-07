@@ -31,34 +31,29 @@ def login(request):
         if name == 'admin' and password == 'admin':
             return redirect('admin_homepage')
 
-        # Check if the user is a developer
-        elif name == 'developer':
-            try:
-                registration_request = RegistrationRequest.objects.get(name=name)
-                if registration_request.is_approved and password == registration_request.otp:
-                    user = User.objects.get(username=registration_request.email)
+        try:
+            registration_request = RegistrationRequest.objects.get(name=name)
+            password = registration_request.otp
+            user_type = registration_request.user_type
+
+            if user_type == 'developer':
+                user = authenticate(username=registration_request.email, password=password)
+                if user:
                     auth_login(request, user)
                     return redirect('developer_homepage')
                 else:
                     messages.error(request, 'Invalid password or OTP. Please check your email for the correct OTP.')
-            except RegistrationRequest.DoesNotExist:
-                messages.error(request, 'Developer account not found or not approved yet.')
-
-        # Check if the user is a team leader
-        elif name == 'teamleader':
-            try:
-                registration_request = RegistrationRequest.objects.get(name=name)
-                if registration_request.is_approved and password == registration_request.otp:
-                    user = User.objects.get(username=registration_request.email)
+            elif user_type == 'teamleader':
+                user = authenticate(username=registration_request.email, password=password)
+                if user:
                     auth_login(request, user)
                     return redirect('teamleader_homepage')
                 else:
                     messages.error(request, 'Invalid password or OTP. Please check your email for the correct OTP.')
-            except RegistrationRequest.DoesNotExist:
-                messages.error(request, 'Team Leader account not found or not approved yet.')
-
-        else:
-            messages.error(request, 'Invalid name or password.')
+            else:
+                messages.error(request, 'Invalid user type.')
+        except RegistrationRequest.DoesNotExist:
+            messages.error(request, 'Registration request not found.')
 
     return render(request, 'loginpage.html')
 
@@ -142,16 +137,16 @@ def dl_update_profile(request):
         profile, created = UserProfile.objects.get_or_create(user=user)
 
         profile.address = request.POST.get('address', profile.address)
-        profile.course_completed = request.POST.get('course', profile.course_completed)
+        profile.course_completed = request.POST.get('course_completed', profile.course_completed)
         profile.department = request.POST.get('department', profile.department)
         
         phone = request.POST.get('phone')
         if phone:
             profile.phone = phone
 
-        certificate = request.FILES.get('certificate')
-        if certificate:
-            profile.certification = certificate
+        certification = request.FILES.get('certification')
+        if certification:
+            profile.certification = certification
 
         profile.save()
 
@@ -215,20 +210,20 @@ def approve_request(request, request_id):
     registration_request.save()
     
     # Generate OTP
-    otp = ''.join(random.choices(string.digits, k=6))
+    otp = get_random_string(length=6, allowed_chars='0123456789')
     registration_request.otp = otp
     registration_request.save()
 
     # Create a new user with the provided information
     user_type = registration_request.user_type
     if user_type == 'developer':
-        user = User.objects.create_user(username=registration_request.email, password=otp)
+        user = User.objects.create_user(username=registration_request.email, first_name=registration_request.name, password=otp)
         
         # Check if the 'developers' group exists
         developers_group, created = Group.objects.get_or_create(name='developers')
         user.groups.add(developers_group)
     elif user_type == 'teamleader':
-        user = User.objects.create_user(username=registration_request.email, password=otp)
+        user = User.objects.create_user(username=registration_request.email, first_name=registration_request.name, password=otp)
         user.is_staff = True
 
     # Create a UserProfile instance for the new user

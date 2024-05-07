@@ -17,7 +17,7 @@ class RegistrationRequest(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(max_length=15, blank=True)
-    address = models.CharField(max_length=255, blank=True)  # Increase max_length for address
+    address = models.CharField(max_length=255, blank=True)  
     course_completed = models.CharField(max_length=100, blank=True)
     certification = models.FileField(upload_to='certifications/', blank=True)
     department = models.CharField(max_length=100, blank=True)

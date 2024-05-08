@@ -29,58 +29,37 @@
     .content {
         padding: 20px;
         color: white;
-      }
-  
-      .box-container {
-        padding-top: 50px;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        gap: 80px;
-      }
-  
-      .box {
+    }
+
+    .user-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .user-item {
         background-color: rgba(255, 255, 255, 0.7);
-        padding: 20px;
-        border-radius: 5px;
-        width: 400px; 
-      }
+        padding: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-      .box button {
-        margin-top: 10px;
-      }
-  
-      .footer {
-        background-color: rgba(0, 0, 0, 0.8);
-        color: #ffffff; 
-        padding: 20px 0;
-        text-align: center;
-      }
-  
-      h2, p {
-        text-align: center;
-        color: black; 
-      }
-
-      p1 {
-        text-align: center;
-        color: white; 
-      }
-
-      footer {
-        background-color: rgba(0, 0, 0, 0.8);
-        color: #ffffff; 
-        padding: 20px 0;
-        text-align: center;
+    .user-item .delete-button {
+        background-color: #ff4136;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
     }
   </style>
-  <title>Teamleader Homepage</title>
+  <title>Delete User</title>
 </head>
 <body>
 
     <nav class="navbar navbar-dark fixed-top">
         <div class="container-fluid">
-          <a class="navbar-brand" href="{% url 'teamleader_homepage' %}">IT Employee Management</a>
+          <a class="navbar-brand" href="{% url 'homepage' %}">IT Employee Management</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -92,35 +71,45 @@
             <div class="offcanvas-body">
               <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'tl_asign_project_page' %}">Asign Project</a>
+                  <a class="nav-link" href="{% url 'admin_homepage' %}">Admin Homepage</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'tl_project_status_page' %}">Project Status</a>
+                  <a class="nav-link" href="{% url 'admin_view_project_page' %}">View Projects</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'tl_profile_page' %}">View Profile</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'tl_reset_password_page' %}">Reset password</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'homepage' %}">Logout</a>
-                  </li>
+                  <a class="nav-link" href="{% url 'admin_logout' %}">Logout</a>
+                </li>
               </ul>
             </div>
           </div>
         </div>
       </nav>
 
-      <div class="content">
-        <h2>Welcome, Teamleader!</h2>
-        <!-- Add content specific to the admin homepage -->
-        <p>This is the teamleader homepage. You can manage projects, users, etc.</p>
-      </div>
+<div class="content">
+  <h2>Delete User</h2>
+  <p>Select a user to delete.</p>
+</div>
 
-  <footer class="fixed-bottom">
+<ul class="user-list">
+  {% for user in users %}
+    <li class="user-item">
+      <span>{{ user.name }}</span>
+      <button class="delete-button" onclick="deleteUser({{ user.id }})">Delete</button>
+    </li>
+  {% endfor %}
+</ul>
+
+<script>
+  function deleteUser(id) {
+    if (confirm('Are you sure you want to delete this user?')) {
+      window.location.href = `/delete_user/${id}/`;
+    }
+  }
+</script>
+
+<footer>
     <div class="container">
-      <p1>&copy; 2024 IT Employee Management. All rights reserved.</p1>
+      <p>&copy; 2024 IT Employee Management. All rights reserved.</p>
     </div>
   </footer>
 

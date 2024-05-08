@@ -83,7 +83,7 @@
       margin-top: 10px;
     }
   </style>
-  <title>Update Developer Profile</title>
+  <title>Update Team Leader Profile</title>
 </head>
 <body>
     <nav class="navbar navbar-dark fixed-top">
@@ -100,13 +100,13 @@
             <div class="offcanvas-body">
               <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'tl_asign_project_page' %}">Asign Project</a>
+                  <a class="nav-link" href="{% url 'tl_asign_project_page' %}">Assign Project</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'tl_project_status_page' %}">Project Status</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'tl_update_profile_page' %}">Update Pofile</a>
+                    <a class="nav-link" href="{% url 'tl_profile_page' %}">View Profile</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'tl_reset_password_page' %}">Reset password</a>
@@ -120,29 +120,28 @@
         </div>
       </nav>
 <div class="container update-profile-container">
-  <h2>Update Developer Profile</h2>
-  <br>
-  <form method="post" action="" enctype="multipart/form-data">
+  <h2>Update Team Leader Profile</h2>
+  <form method="post" action="{% url 'tl_update_profile' %}" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="mb-3">
       <label for="name" class="form-label">Name</label>
-      <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" value="{{ user.name }}" readonly>
+      <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" value="{{ user.get_full_name }}" >
     </div>
     <div class="mb-3">
       <label for="address" class="form-label">Address</label>
-      <input type="text" class="form-control" id="address" name="address" placeholder="Enter your updated address">
+      <input type="text" class="form-control" id="address" name="address" placeholder="Enter your updated address" value="{{ profile.address }}">
     </div>
     <div class="mb-3">
       <label for="email" class="form-label">Email address</label>
-      <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Enter your updated email" value="{{ user.email }}" readonly>
+      <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Enter your updated email" value="{{ profile.user.username }}" >
     </div>
     <div class="mb-3">
       <label for="phone" class="form-label">Phone Number</label>
-      <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter your updated phone number">
+      <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter your updated phone number" value="{{ profile.phone }}">
     </div>
     <div class="mb-3">
       <label for="course_completed" class="form-label">Course Completed</label>
-      <input type="text" class="form-control" id="course_completed" name="course_completed" placeholder="Enter your updated course completed">
+      <input type="text" class="form-control" id="course_completed" name="course_completed" placeholder="Enter your updated course completed" value="{{ profile.course_completed }}">
     </div>
     <div class="mb-3">
       <label for="certification" class="form-label">Certificate Attachment</label>
@@ -150,13 +149,12 @@
     </div>
     <div class="mb-3">
       <label for="department" class="form-label">Department</label>
-      <input type="text" class="form-control" id="department" name="department" placeholder="Enter your updated department">
+      <input type="text" class="form-control" id="department" name="department" placeholder="Enter your updated department" value="{{ profile.department }}">
     </div>
     <button type="submit" class="btn btn-primary d-block mx-auto">Update Profile</button>
   </form>
 </div>
-<br>
-<br>
+
 <footer class="fixed-bottom">
   <div class="container">
     <p1>&copy; 2024 IT Employee Management. All rights reserved.</p1>

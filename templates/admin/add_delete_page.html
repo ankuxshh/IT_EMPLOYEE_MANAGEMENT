@@ -44,10 +44,14 @@
         padding: 20px;
         border-radius: 5px;
         width: 400px; 
+        text-align: center;
       }
 
       .box button {
         margin-top: 10px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
       }
   
       .footer {
@@ -118,14 +122,16 @@
 <div class="box-container">
     <div class="box">
       <h2>Add Users</h2>
-      <br>
-      <button class="btn btn-primary d-flex justify-content-center">Delete Users</button>
+      
+
+      <a href="{% url 'add_user_page' %}" class="btn btn-primary update-btn">Add User</a>
     </div>
     
     <div class="box">
       <h2>Delete User</h2>
-      <br>
-      <button class="btn btn-primary d-flex justify-content-center">Delete User</button>
+      
+
+      <a href="{% url 'delete_user_page' %}" class="btn btn-primary update-btn">Delete User</a>
     </div>
   </div>
 

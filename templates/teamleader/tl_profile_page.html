@@ -26,27 +26,53 @@
       background-color: rgba(0, 0, 0, 0.8);
     }
 
-    .form-container {
+    .profile-container {
+      max-width: 600px;
+      margin: 0 auto;
       background-color: rgba(255, 255, 255, 0.7);
       padding: 20px;
       border-radius: 5px;
-      width: 400px;
-      margin: auto;
-      margin-top: 20px;
     }
 
-    .form-container button {
-      margin-top: 10px;
+    .profile-details {
+      text-align: center;
     }
 
-    .footer {
+    .update-btn {
+      display: block;
+      margin: 20px auto;
+    }
+
+    .certificate-container {
+      max-width: 600px;
+      margin: 20px auto;
+      text-align: center;
+    }
+
+    .certificate-container img {
+      max-width: 100%;
+    }
+
+    footer {
       background-color: rgba(0, 0, 0, 0.8);
       color: #ffffff; 
       padding: 20px 0;
       text-align: center;
     }
+
+    /* Add custom styles for your project status page */
+    .project-status-container {
+      padding: 20px;
+    }
+
+    .project-status-card {
+      background-color: rgba(255, 255, 255, 0.7);
+      padding: 20px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
   </style>
-  <title>Assign Project</title>
+  <title>Project Status Page</title>
 </head>
 <body>
 
@@ -84,47 +110,31 @@
   </div>
 </nav>
 
-<div class="form-container">
-  <h2>Assign Project</h2>
-  <form method="post" action="" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="mb-3">
-      <label for="select_project" class="form-label">Select Project</label>
-      <select class="form-select" id="select_project" name="select_project" required>
-        <!-- Populate this dropdown with available projects -->
-        <option value="project1">Project 1</option>
-        <option value="project2">Project 2</option>
-        <!-- Add more options as needed -->
-      </select>
-    </div>
-    <div class="mb-3">
-      <label for="select_developer" class="form-label">Select Developer</label>
-      <select class="form-select" id="select_developer" name="select_developer" required>
-        <!-- Populate this dropdown with available developers -->
-        <option value="developer1">Developer 1</option>
-        <option value="developer2">Developer 2</option>
-        <!-- Add more options as needed -->
-      </select>
-    </div>
-    <div class="mb-3">
-      <label for="module" class="form-label">Module</label>
-      <input type="text" class="form-control" id="module" name="module" required>
-    </div>
-    <div class="mb-3">
-      <label for="attachments" class="form-label">Attachments</label>
-      <input type="file" class="form-control" id="attachments" name="attachments" required>
-    </div>
-    <div class="mb-3">
-      <label for="start_date" class="form-label">Start Date</label>
-      <input type="date" class="form-control" id="start_date" name="start_date" required>
-    </div>
-    <div class="mb-3">
-      <label for="end_date" class="form-label">End Date</label>
-      <input type="date" class="form-control" id="end_date" name="end_date" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Assign Project</button>
-  </form>
+<div class="profile-container">
+  <div class="profile-details">
+    <h3>{{ profile.user.first_name }} {{ profile.user.last_name }}</h3>
+    <p><strong>Email:</strong> {{ profile.user.username }}</p>
+    <p><strong>Phone:</strong> {{ profile.phone }}</p>
+    <p><strong>Address:</strong> {{ profile.address }}</p>
+    <p><strong>Course Completed:</strong> {{ profile.course_completed }}</p>
+    <p><strong>Department:</strong> {{ profile.department }}</p>
+    {% if profile.certification %}
+      <p><strong>Certification:</strong> <a href="{{ profile.certification.url }}">View Certification</a></p>
+    {% else %}
+      <p><strong>Certification:</strong> Not available</p>
+    {% endif %}
+  </div>
+  <a href="{% url 'tl_update_profile_page' %}" class="btn btn-primary update-btn">Update Profile</a>
 </div>
+
+{% if profile.certification %}
+  <div class="certificate-container">
+    <h4>Certification</h4>
+    <a href="{{ profile.certification.url }}">
+      <img src="{{ profile.certification.url }}" alt="Certification">
+    </a>
+  </div>
+{% endif %}
 
 <footer class="fixed-bottom">
   <div class="container">

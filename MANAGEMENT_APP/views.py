@@ -9,7 +9,7 @@ from django.contrib.auth.models import User, Group
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
-from .models import RegistrationRequest, UserProfile, UserProject, UserProjectModule, UserWorkProgress, UserNotification
+from .models import RegistrationRequest, UserProfile, UserProject, UserProjectModule, UserWorkProgress, UserNotification, ProjectAssignment
 from django.utils.crypto import get_random_string
 
 # Homepage and login page views
@@ -262,35 +262,130 @@ def admin_add_project_page(request):
 
 def admin_add_project(request):
     if request.method == 'POST':
-        client_name = request.POST.get('client_name')
-        project_name = request.POST.get('project_name')
+        client_name = request.POST.get('clientName')
+        project_name = request.POST.get('projectName')
         description = request.POST.get('description')
-        start_date = request.POST.get('start_date')
-        end_date = request.POST.get('end_date')
+        start_date_str = request.POST.get('startDate')
+        end_date_str = request.POST.get('endDate')
         attachment = request.FILES.get('attachment')
 
-        start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
-        end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+        try:
+            start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+            end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+        except ValueError:
+            messages.error(request, 'Invalid date format. Please use YYYY-MM-DD format.')
+            return redirect('admin_add_project_page')
 
-        UserProject.objects.create(client_name=client_name, project_name=project_name,
-                                    description=description, start_date=start_date,
-                                    end_date=end_date, attachment=attachment)
+        # Save the project data to the UserProject model
+        UserProject.objects.create(
+            client_name=client_name,
+            project_name=project_name,
+            description=description,
+            start_date=start_date,
+            end_date=end_date,
+            attachment=attachment
+        )
 
         messages.success(request, 'Project added successfully.')
 
-        return redirect('admin_homepage')
+        return redirect('admin/admin_add_project_page.html')
+
+    return render(request, 'admin/admin_add_project_page.html')
 
 def admin_asign_project_page(request):
-    return render(request, 'admin/admin_asign_project_page.html')
+    team_leaders = UserProfile.objects.filter(user__is_staff=True)
+    projects = UserProject.objects.all()
+    context = {
+        'team_leaders': team_leaders,
+        'projects': projects,
+    }
+    return render(request, 'admin/admin_asign_project_page.html', context)
 
 def asign_project_to_team_leader(request):
-    return render(request, 'admin/admin_asign_project_page.html')
+    if request.method == 'POST':
+        team_leader_id = request.POST.get('team_leader')
+        project_id = request.POST.get('project')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        attachments = request.FILES.getlist('attachments')
+
+        # Get the selected team leader and project
+        team_leader = UserProfile.objects.get(id=team_leader_id)
+        project = UserProject.objects.get(id=project_id)
+
+        # Create a new project assignment
+        ProjectAssignment.objects.create(
+            team_leader=team_leader,
+            project=project,
+            start_date=start_date,
+            end_date=end_date,
+            attachments=attachments
+        )
+
+        messages.success(request, 'Project assigned successfully.')
+        return redirect('admin_asign_project_page')
+
+    return redirect('admin_asign_project_page')
 
 def admin_promotion_page(request):
     return render(request, 'admin/admin_promotion_page.html')
 
 def add_delete_page(request):
     return render(request, 'admin/add_delete_page.html')
+
+def add_user_page(request):
+    return render(request, 'admin/add_user_page.html')
+
+def add_user(request):
+    if request.method == 'POST':
+        # Get form data
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        phone = request.POST.get('phone')
+        course_completed = request.POST.get('course_completed')
+        certification = request.FILES.get('certification')
+        department = request.POST.get('department')
+        user_type = request.POST.get('user_type')
+        password = request.POST.get('password')
+
+        # Create a new user
+        user = User.objects.create_user(username=email, password=password)
+
+        # Create a UserProfile instance
+        UserProfile.objects.create(
+            user=user,
+            name=name,
+            address=address,
+            phone=phone,
+            course_completed=course_completed,
+            certification=certification,
+            department=department,
+            user_type=user_type
+        )
+
+        # Log the user in
+        user = authenticate(username=email, password=password)
+        login(request, user)
+
+        # Redirect to a success page or homepage
+        return redirect('add_user_page')  # Replace with your success page URL
+
+    return render(request, 'add_user_page.html')
+
+def delete_user_page(request):
+    return render(request, 'admin/delete_user_page.html')
+
+def delete_user(request, user_id):
+    user_profile = get_object_or_404(UserProfile, id=user_id)
+    user = user_profile.user  # Get the associated User object
+
+    # Delete the UserProfile and User objects
+    user_profile.delete()
+    user.delete()
+
+    # Redirect to the user list or a success page
+    return redirect('delete_user_page')  
 
 def admin_status_page(request):
     return render(request, 'admin/admin_status_page.html')
@@ -317,7 +412,50 @@ def tl_asign_project_page(request):
 def tl_project_status_page(request):
     return render(request, 'teamleader/tl_project_status_page.html')
 
+def tl_profile_page(request):
+    user = request.user
+    profile = UserProfile.objects.get(user=user)
+    context = {
+        'profile': profile,
+    }
+    return render(request, 'teamleader/tl_profile_page.html', context)
+
 def tl_update_profile_page(request):
+    user = request.user
+    profile = UserProfile.objects.get(user=user)
+    context = {
+        'profile': profile,
+    }
+    return render(request, 'teamleader/tl_update_profile_page.html', context)
+
+def tl_update_profile(request):
+    if request.method == 'POST':
+        user = request.user
+        profile = UserProfile.objects.get(user=user)
+
+        # Get the updated values from the form
+        address = request.POST.get('address', profile.address)
+        phone = request.POST.get('phone', profile.phone)
+        course_completed = request.POST.get('course_completed', profile.course_completed)
+        department = request.POST.get('department', profile.department)
+
+        # Update the profile with the new values
+        profile.address = address
+        profile.phone = phone
+        profile.course_completed = course_completed
+        profile.department = department
+
+        # Check if a new certification file is uploaded
+        certification = request.FILES.get('certification', None)
+        if certification:
+            profile.certification = certification
+
+        profile.save()
+
+        messages.success(request, 'Profile updated successfully.')
+
+        return redirect('tl_profile_page')
+
     return render(request, 'teamleader/tl_update_profile_page.html')
 
 def tl_reset_password_page(request):

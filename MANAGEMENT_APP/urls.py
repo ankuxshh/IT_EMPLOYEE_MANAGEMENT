@@ -48,7 +48,7 @@ urlpatterns = [
 
     path('reject_request/<int:request_id>/', views.reject_request, name='reject_request'),
 
-    path('admin_add_project_page/', views.admin_add_project_page, name='admin_add_project_page'),
+    path('admin_add_project_page', views.admin_add_project_page, name='admin_add_project_page'),
     
     path('admin_add_project', views.admin_add_project, name='admin_add_project'),
 
@@ -58,7 +58,17 @@ urlpatterns = [
 
     path('add_delete_page', views.add_delete_page, name='add_delete_page'),
 
+    path('add_user_page', views.add_user_page, name='add_user_page'),
+
+    path('add_user', views.add_user, name='add_user'),
+
+    path('delete_user_page', views.delete_user_page, name='delete_user_page'),
+
+    path('delete_user', views.delete_user, name='delete_user'),
+
     path('admin_status_page', views.admin_status_page, name='admin_status_page'),
+
+    path('admin_view_project_page', views.admin_view_project_page, name='admin_view_project_page'),
 
     path('admin_logout', views.admin_logout, name='admin_logout'),
 
@@ -70,7 +80,11 @@ urlpatterns = [
 
     path('tl_project_status_page', views.tl_project_status_page, name='tl_project_status_page'),
 
+    path('tl_profile_page', views.tl_profile_page, name='tl_profile_page'),
+
     path('tl_update_profile_page', views.tl_update_profile_page, name='tl_update_profile_page'),
+
+    path('tl_update_profile', views.tl_update_profile, name='tl_update_profile'),
 
     path('tl_reset_password_page', views.tl_reset_password_page, name='tl_reset_password_page'),
 
